@@ -112,7 +112,7 @@ const Chatbot: React.FC = () => {
   return (
     <div className="flex flex-col h-screen w-full bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 transition-colors duration-300">
       {/* Header */}
-      <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4 bg-white dark:bg-gray-800 shadow-md border-b-2 border-gray-300 dark:border-gray-700">
+      <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
             <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,9 +128,7 @@ const Chatbot: React.FC = () => {
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 
-                   border-2 border-gray-300 dark:border-transparent hover:border-gray-400 dark:hover:border-transparent
-                   transition-all duration-200 shadow-sm"
+          className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
           aria-label="Toggle theme"
         >
           {isDarkMode ? (
@@ -170,9 +168,9 @@ const Chatbot: React.FC = () => {
                     key={index}
                     onClick={() => handleQuickAction(action)}
                     className="px-4 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 
-                             rounded-xl border-2 border-gray-300 dark:border-gray-700 
+                             rounded-xl border border-gray-200 dark:border-gray-700 
                              hover:border-blue-500 dark:hover:border-blue-500 
-                             hover:shadow-xl shadow-md transition-all duration-200 text-sm font-medium
+                             hover:shadow-lg transition-all duration-200 text-sm font-medium
                              hover:scale-105 active:scale-95"
                   >
                     {action}
@@ -213,10 +211,10 @@ const Chatbot: React.FC = () => {
 
                     {/* Message Bubble */}
                     <div
-                      className={`px-4 py-3 rounded-2xl ${
+                      className={`px-4 py-3 rounded-2xl shadow-sm ${
                         message.sender === 'user'
-                          ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md'
-                          : 'bg-gradient-to-br from-blue-50 to-purple-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-2 border-blue-200 dark:border-gray-700 shadow-md'
+                          ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white'
+                          : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
                       }`}
                     >
                       <p className="text-sm sm:text-base whitespace-pre-wrap break-words leading-relaxed">
@@ -244,11 +242,11 @@ const Chatbot: React.FC = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                       </svg>
                     </div>
-                    <div className="px-4 py-3 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 dark:bg-gray-800 border-2 border-blue-200 dark:border-gray-700 shadow-md">
+                    <div className="px-4 py-3 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
                       <div className="flex space-x-2">
-                        <div className="w-2 h-2 bg-blue-400 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-blue-400 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-blue-400 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                       </div>
                     </div>
                   </div>
@@ -262,7 +260,7 @@ const Chatbot: React.FC = () => {
       </div>
 
       {/* Input Area */}
-      <div className="bg-white dark:bg-gray-800 border-t-2 border-gray-300 dark:border-gray-700 px-4 sm:px-6 lg:px-8 py-4 shadow-lg">
+      <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 sm:px-6 lg:px-8 py-4 shadow-lg">
         <div className="max-w-4xl mx-auto">
           <div className="relative flex items-end space-x-2 sm:space-x-3">
             <div className="flex-1 relative">
@@ -273,13 +271,12 @@ const Chatbot: React.FC = () => {
                 onKeyPress={handleKeyPress}
                 placeholder="Message Database Agent..."
                 rows={1}
-                className="w-full px-4 py-3 pr-12 bg-gray-50 dark:bg-gray-700 
+                className="w-full px-4 py-3 pr-12 bg-gray-100 dark:bg-gray-700 
                          text-gray-900 dark:text-gray-100 rounded-2xl 
-                         border-2 border-gray-300 dark:border-transparent 
-                         focus:border-blue-500 hover:border-gray-400 dark:hover:border-gray-600
+                         border-2 border-transparent focus:border-blue-500 
                          focus:outline-none resize-none text-sm sm:text-base
                          placeholder-gray-500 dark:placeholder-gray-400
-                         transition-all duration-200 min-h-[48px] max-h-[120px] shadow-sm"
+                         transition-all duration-200 min-h-[48px] max-h-[120px]"
                 style={{ fieldSizing: 'content' } as React.CSSProperties}
               />
               {inputValue && (
@@ -302,8 +299,7 @@ const Chatbot: React.FC = () => {
                        text-white rounded-2xl hover:from-blue-600 hover:to-blue-700 
                        disabled:opacity-50 disabled:cursor-not-allowed 
                        transition-all duration-200 shadow-lg hover:shadow-xl
-                       hover:scale-105 active:scale-95
-                       border-2 border-blue-600 dark:border-transparent"
+                       hover:scale-105 active:scale-95"
               aria-label="Send message"
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

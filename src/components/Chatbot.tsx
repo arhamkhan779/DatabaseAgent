@@ -15,15 +15,6 @@ const Chatbot: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const quickActions = [
-    "Analyze my database",
-    "Show me query examples",
-    "Explain database structure",
-    "Performance tips",
-    "Data visualization",
-    "Export data"
-  ];
-
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -39,28 +30,6 @@ const Chatbot: React.FC = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const getDummyResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    if (lowerMessage.includes('database') || lowerMessage.includes('analyze')) {
-      return `I've analyzed your database structure. Here's what I found:\n\n• **Total Tables**: 12\n• **Total Records**: 45,234\n• **Database Size**: 2.3 GB\n\nYour database appears to be well-structured with proper indexing on key columns. The main tables include Users, Orders, Products, and Transactions. Would you like me to dive deeper into any specific table or generate a query?`;
-    } else if (lowerMessage.includes('query') || lowerMessage.includes('sql')) {
-      return `Here are some example SQL queries you can use:\n\n\`\`\`sql\n-- Get top 10 customers by order value\nSELECT customer_id, SUM(total_amount) as total_spent\nFROM orders\nGROUP BY customer_id\nORDER BY total_spent DESC\nLIMIT 10;\n\`\`\`\n\nThis query will help you identify your most valuable customers. Would you like me to explain how it works or generate a different query?`;
-    } else if (lowerMessage.includes('structure') || lowerMessage.includes('schema')) {
-      return `Your database schema consists of the following main entities:\n\n**Users Table**\n- user_id (Primary Key)\n- username, email, created_at\n- Total records: 8,523\n\n**Orders Table**\n- order_id (Primary Key)\n- user_id (Foreign Key)\n- order_date, total_amount, status\n- Total records: 24,156\n\n**Products Table**\n- product_id (Primary Key)\n- name, price, category, stock\n- Total records: 1,234\n\nWould you like me to show the relationships between these tables?`;
-    } else if (lowerMessage.includes('performance') || lowerMessage.includes('optimize')) {
-      return `Here are some performance optimization tips for your database:\n\n1. **Indexing**: Add indexes on frequently queried columns (user_id, order_date)\n2. **Query Optimization**: Use EXPLAIN to analyze slow queries\n3. **Caching**: Implement Redis for frequently accessed data\n4. **Connection Pooling**: Configure connection pools to reduce overhead\n5. **Partitioning**: Consider table partitioning for large tables\n\nYour current query response time averages 120ms, which is good. Would you like me to analyze specific slow queries?`;
-    } else if (lowerMessage.includes('visualization') || lowerMessage.includes('chart')) {
-      return `I can help you visualize your data! Here are some visualization options:\n\n📊 **Available Charts**:\n- Sales trends over time (Line chart)\n- Revenue by category (Pie chart)\n- Customer distribution (Bar chart)\n- Order status breakdown (Donut chart)\n\n📈 **Key Metrics**:\n- Monthly growth rate: +12.5%\n- Average order value: $84.32\n- Customer retention: 68%\n\nWhich visualization would you like me to generate first?`;
-    } else if (lowerMessage.includes('export') || lowerMessage.includes('download')) {
-      return `I can export your data in multiple formats:\n\n**Available Export Formats**:\n✓ CSV (Comma-Separated Values)\n✓ JSON (JavaScript Object Notation)\n✓ Excel (.xlsx)\n✓ PDF Report\n\n**Export Options**:\n- Full database export\n- Filtered data by date range\n- Specific tables only\n- Query results export\n\nWhich format and data would you like to export?`;
-    } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-      return `Hello! 👋 I'm your Database Agent assistant. I'm here to help you with:\n\n• Database analysis and insights\n• SQL query generation\n• Performance optimization\n• Data visualization\n• Schema exploration\n• Export and reporting\n\nWhat would you like to explore today?`;
-    } else {
-      return `Thank you for your question! I understand you're asking about "${userMessage}".\n\nAs your Database Agent, I can help you with comprehensive database management tasks including:\n\n🔍 **Analysis**: Deep dive into your data structure and patterns\n📝 **Queries**: Generate and optimize SQL queries\n⚡ **Performance**: Identify bottlenecks and suggest improvements\n📊 **Insights**: Provide actionable insights from your data\n\nCould you provide more details about what specific aspect you'd like me to help with?`;
-    }
   };
 
   const handleSendMessage = async (messageText?: string) => {
@@ -80,18 +49,34 @@ const Chatbot: React.FC = () => {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate bot thinking time
-    setTimeout(() => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: textToSend }),
+      });
+      const data = await response.json();
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: getDummyResponse(textToSend),
+        text: data.message,
         sender: 'bot',
         timestamp: new Date()
       };
-
       setMessages(prev => [...prev, botResponse]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'Sorry, I encountered an error while processing your request.',
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -99,10 +84,6 @@ const Chatbot: React.FC = () => {
       e.preventDefault();
       handleSendMessage();
     }
-  };
-
-  const handleQuickAction = (action: string) => {
-    handleSendMessage(action);
   };
 
   const toggleTheme = () => {
@@ -160,23 +141,6 @@ const Chatbot: React.FC = () => {
                 I'm your AI-powered database assistant. Ask me anything about your database, 
                 and I'll help you analyze, optimize, and understand your data better.
               </p>
-              
-              {/* Quick Action Buttons */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-3xl mt-6">
-                {quickActions.map((action, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleQuickAction(action)}
-                    className="px-4 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 
-                             rounded-xl border border-gray-200 dark:border-gray-700 
-                             hover:border-blue-500 dark:hover:border-blue-500 
-                             hover:shadow-lg transition-all duration-200 text-sm font-medium
-                             hover:scale-105 active:scale-95"
-                  >
-                    {action}
-                  </button>
-                ))}
-              </div>
             </div>
           ) : (
             <div className="space-y-6 pb-4">
@@ -217,9 +181,13 @@ const Chatbot: React.FC = () => {
                           : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
                       }`}
                     >
-                      <p className="text-sm sm:text-base whitespace-pre-wrap break-words leading-relaxed">
-                        {message.text}
-                      </p>
+                      {message.sender === 'bot' ? (
+                        <div className="text-sm sm:text-base break-words leading-relaxed" dangerouslySetInnerHTML={{ __html: message.text }} />
+                      ) : (
+                        <p className="text-sm sm:text-base whitespace-pre-wrap break-words leading-relaxed">
+                          {message.text}
+                        </p>
+                      )}
                       <p
                         className={`text-xs mt-2 ${
                           message.sender === 'user'

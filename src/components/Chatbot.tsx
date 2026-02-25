@@ -207,14 +207,14 @@ const Chatbot: React.FC = () => {
 
                     {/* Message Bubble */}
                     <div
-                      className={`px-4 py-3 rounded-2xl shadow-sm ${
+                      className={`px-4 py-3 rounded-2xl shadow-sm overflow-hidden ${
                         message.sender === 'user'
                           ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white'
                           : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
                       }`}
                     >
                       {message.sender === 'bot' ? (
-                        <div className="text-sm sm:text-base break-words leading-relaxed" dangerouslySetInnerHTML={{ __html: message.text }} />
+                        <div className="text-sm sm:text-base break-words leading-relaxed overflow-x-auto max-w-full" dangerouslySetInnerHTML={{ __html: message.text }} />
                       ) : (
                         <p className="text-sm sm:text-base whitespace-pre-wrap break-words leading-relaxed">
                           {message.text}

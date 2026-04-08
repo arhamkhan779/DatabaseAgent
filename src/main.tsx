@@ -5,9 +5,9 @@ import App from './App.tsx'
 
 // Ensure root element takes full height
 const rootElement = document.getElementById('root')!;
-rootElement.style.height = '100vh';
+rootElement.style.minHeight = '100vh';
 rootElement.style.width = '100%';
-rootElement.style.overflow = 'hidden';
+rootElement.style.overflow = 'auto';
 
 createRoot(rootElement).render(
   <StrictMode>

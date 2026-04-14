@@ -68,7 +68,6 @@ const Chatbot: React.FC = () => {
     
     if (!textToSend) return;
 
-    // Add user message
     const userMessage: UserMessage = {
       id: Date.now().toString(),
       text: textToSend,
@@ -115,7 +114,7 @@ const Chatbot: React.FC = () => {
       const errorResponse: BotMessage = {
         id: (Date.now() + 1).toString(),
         sender: 'bot',
-        dataAnalysisOutput: '<p>Sorry, I encountered an error while processing your request.</p>',
+        dataAnalysisOutput: '<div class="p-4 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 font-bold text-sm">Error processing request. Please check your connection.</div>',
         visualization: null,
         timestamp: new Date()
       };
@@ -138,253 +137,235 @@ const Chatbot: React.FC = () => {
     navigate('/auth');
   };
 
-  const isFullHtmlDocument = (html: string | null): boolean => {
-    if (typeof html !== 'string') {
-      return false;
-    }
-
-    const trimmedHtml = html.trim().toLowerCase();
-    return trimmedHtml.startsWith('<!doctype html') || trimmedHtml.startsWith('<html');
-  };
-
   const shouldRenderInIframe = (html: string | null): boolean => {
-    if (typeof html !== 'string') {
-      return false;
-    }
-
-    return /<script\b|<canvas\b/i.test(html) || isFullHtmlDocument(html);
+    if (typeof html !== 'string') return false;
+    return /<script\b|<canvas\b/i.test(html) || html.trim().toLowerCase().startsWith('<!doctype html');
   };
 
   const toVisualizationSrcDoc = (html: string): string => {
-    if (isFullHtmlDocument(html)) {
-      return html;
-    }
-
-    return `<!doctype html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      html, body { margin: 0; padding: 0; background: #ffffff; color: #111827; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-      body { padding: 12px; }
-      canvas { display: block; max-width: 100%; }
-    </style>
-  </head>
-  <body>
-    ${html}
-  </body>
-</html>`;
+    if (html.trim().toLowerCase().startsWith('<!doctype html')) return html;
+    return `<!doctype html><html><head><meta charset="UTF-8" /><style>body { margin: 0; padding: 20px; font-family: sans-serif; }</style></head><body>${html}</body></html>`;
   };
 
   return (
-    <div className="relative flex h-screen w-full flex-col overflow-hidden bg-[#081016] text-[#f4efe7]">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-[-8rem] top-[-6rem] h-[24rem] w-[24rem] rounded-full bg-[#c48d3a]/12 blur-3xl" />
-        <div className="absolute right-[-7rem] top-[8rem] h-[20rem] w-[20rem] rounded-full bg-[#8fb9aa]/10 blur-3xl" />
-        <div className="absolute bottom-[-10rem] left-[18%] h-[28rem] w-[28rem] rounded-full bg-[#5a6a7a]/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:96px_96px] opacity-20 [mask-image:radial-gradient(circle_at_center,black,transparent_82%)]" />
+    <div className="flex h-screen bg-[#F8FAFC] text-[#1E3A8A] selection:bg-blue-100 overflow-hidden font-sans">
+      {/* Structural Accents */}
+      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-50/50 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-indigo-50/50 rounded-full blur-[100px]" />
       </div>
 
-      <div className="relative flex h-full flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between border-b border-white/10 px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex items-center space-x-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 sm:h-10 sm:w-10">
-            <svg className="h-5 w-5 text-[#f1c27d] sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+      {/* Sidebar - Analytics Navigation */}
+      <aside className="hidden lg:flex flex-col w-80 bg-white border-r border-slate-200 p-8 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+        <div className="flex items-center gap-3 mb-12 px-2 cursor-pointer group" onClick={() => navigate('/')}>
+          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200 group-hover:scale-105 transition-all">
+            <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <ellipse cx="12" cy="6" rx="7" ry="3" />
+              <path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6" />
+              <path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6" />
             </svg>
           </div>
-          <div>
-            <h1 className="font-display text-lg font-semibold tracking-[0.08em] text-white sm:text-xl">Database Agent</h1>
-            <p className="hidden text-xs text-[#d2c9bd] sm:block">Ask. Inspect SQL. Visualize.</p>
+          <div className="flex flex-col">
+            <span className="font-black text-lg tracking-tighter leading-none">DatabaseAgent</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-blue-500 mt-1">Analytics Lab</span>
           </div>
         </div>
-        
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={handleLogout}
-            className="rounded-lg border border-white/15 bg-white/5 p-2 transition hover:border-white/25 hover:bg-white/10"
-            aria-label="Logout"
-          >
-            <svg className="h-5 w-5 text-[#f1c27d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-          </button>
-        </div>
-      </header>
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 scrollbar-thin">
-        <div className="max-w-4xl mx-auto">
-          {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center py-12 sm:py-20">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/15 bg-white/5 shadow-2xl sm:h-20 sm:w-20">
-                <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              </div>
-              <h2 className="mb-4 text-2xl font-bold text-white sm:text-4xl">
-                Hi {user.username || 'there'}. What should we dive into today?
-              </h2>
-              <p className="mb-8 max-w-2xl text-sm text-[#ddd6ca] sm:text-base">
-                I'm your AI-powered database assistant. Ask me anything about your database, 
-                and I'll help you analyze, optimize, and understand your data better.
-              </p>
+        <div className="flex-1 space-y-2 overflow-y-auto">
+          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-2">Recent Queries</div>
+          {messages.filter(m => m.sender === 'user').map((m, i) => (
+            <div key={i} className="p-3 rounded-xl hover:bg-white text-sm font-bold text-slate-600 truncate cursor-pointer transition-colors border border-transparent hover:border-slate-100">
+               {m.text}
             </div>
-          ) : (
-            <div className="space-y-6 pb-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`flex items-start space-x-3 max-w-[85%] sm:max-w-[75%] ${
-                      message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                    }`}
-                  >
-                    {/* Avatar */}
-                    <div
-                      className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
-                        message.sender === 'user'
-                          ? 'bg-[#f1c27d]'
-                          : 'bg-white/10 border border-white/20'
-                      }`}
-                    >
-                      {message.sender === 'user' ? (
-                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                        </svg>
-                      ) : (
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                      )}
-                    </div>
-
-                    {/* Message Bubble */}
-                    <div
-                      className={`overflow-hidden rounded-2xl px-4 py-3 shadow-sm ${
-                        message.sender === 'user'
-                          ? 'bg-[#f1c27d] text-[#11151b]'
-                          : 'border border-white/10 bg-[#0d151c]/95 text-[#f4efe7]'
-                      }`}
-                    >
-                      {message.sender === 'bot' ? (
-                        <div className="space-y-3 text-sm sm:text-base break-words leading-relaxed max-w-full">
-                          <div className="overflow-x-auto" dangerouslySetInnerHTML={{ __html: message.dataAnalysisOutput || '<p>No analysis output returned.</p>' }} />
-                          {typeof message.visualization === 'string' && message.visualization.trim() ? (
-                            <div className="overflow-x-auto border-t border-white/10 pt-3">
-                              {shouldRenderInIframe(message.visualization) ? (
-                                <iframe
-                                  title={`visualization-${message.id}`}
-                                  srcDoc={toVisualizationSrcDoc(message.visualization)}
-                                  sandbox="allow-scripts allow-same-origin"
-                                  className="w-full min-h-[460px] rounded-lg border border-white/15 bg-white"
-                                />
-                              ) : (
-                                <div dangerouslySetInnerHTML={{ __html: message.visualization }} />
-                              )}
-                            </div>
-                          ) : null}
-                        </div>
-                      ) : (
-                        <p className="text-sm sm:text-base whitespace-pre-wrap break-words leading-relaxed">
-                          {message.text}
-                        </p>
-                      )}
-                      <p
-                        className={`text-xs mt-2 ${
-                          message.sender === 'user'
-                            ? 'text-[#332510]'
-                            : 'text-[#b8a995]'
-                        }`}
-                      >
-                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {isTyping && (
-                <div className="flex justify-start">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                      </svg>
-                    </div>
-                    <div className="rounded-2xl border border-white/10 bg-[#0d151c]/95 px-4 py-3 shadow-sm">
-                      <div className="flex space-x-2">
-                        <div className="h-2 w-2 animate-bounce rounded-full bg-[#b8a995]" style={{ animationDelay: '0ms' }}></div>
-                        <div className="h-2 w-2 animate-bounce rounded-full bg-[#b8a995]" style={{ animationDelay: '150ms' }}></div>
-                        <div className="h-2 w-2 animate-bounce rounded-full bg-[#b8a995]" style={{ animationDelay: '300ms' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div ref={messagesEndRef} />
-            </div>
+          ))}
+          {messages.length === 0 && (
+             <div className="px-2 text-xs font-bold text-slate-400 italic">No history yet...</div>
           )}
         </div>
-      </div>
 
-      {/* Input Area */}
-      <div className="border-t border-white/10 bg-[#0c141b]/95 px-4 py-4 shadow-lg sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="relative flex items-end space-x-2 sm:space-x-3">
-            <div className="flex-1 relative">
-              <textarea
-                ref={inputRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Message Database Agent..."
-                rows={1}
-                className="w-full rounded-2xl border border-white/12 bg-white/5 px-4 py-3 pr-12
-                         text-sm text-[#f4efe7] placeholder:text-[#9faab6] sm:text-base
-                         focus:border-[#f1c27d]/60 focus:outline-none focus:ring-2 focus:ring-[#f1c27d]/30
-                         resize-none
-                         transition-all duration-200 min-h-[48px] max-h-[120px]"
-                style={{ fieldSizing: 'content' } as React.CSSProperties}
-              />
-              {inputValue && (
-                <button
-                  onClick={() => setInputValue('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9faab6] transition hover:text-[#f4efe7]"
-                  aria-label="Clear input"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              )}
+        <div className="mt-auto pt-6 border-t border-slate-200">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-cta/10 flex items-center justify-center text-cta font-black text-xs">
+                {user.username?.[0]?.toUpperCase() || 'U'}
+              </div>
+              <div className="text-xs font-black text-slate-700 truncate max-w-[100px]">{user.username || 'User'}</div>
             </div>
-            
-            <button
-              onClick={() => handleSendMessage()}
-              disabled={!inputValue.trim() || isTyping}
-              className="flex-shrink-0 rounded-2xl bg-[#f1c27d] p-3 text-[#11151b]
-                       transition disabled:cursor-not-allowed disabled:opacity-50
-                       hover:bg-[#f5d39e]"
-              aria-label="Send message"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
+            <button onClick={handleLogout} className="p-2 text-slate-400 hover:text-rose-500 transition-colors">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
             </button>
           </div>
-          
-          <p className="mt-2 text-center text-xs text-[#a99c88]">
-            Press Enter to send • Shift + Enter for new line
-          </p>
         </div>
-      </div>
-      </div>
+      </aside>
+
+      {/* Main Chat Area */}
+      <main className="flex-1 flex flex-col relative h-full">
+        {/* Mobile Header */}
+        <header className="lg:hidden h-16 bg-white/80 backdrop-blur-lg border-bottom border-slate-200 flex items-center justify-between px-6 z-20">
+           <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-cta rounded-lg flex items-center justify-center text-white">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3" /><path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6" /><path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6" /></svg>
+              </div>
+              <span className="font-extrabold text-lg tracking-tight">Analytics Lab</span>
+           </div>
+           <button onClick={handleLogout} className="text-slate-400 font-bold text-xs uppercase tracking-widest">Logout</button>
+        </header>
+
+        {/* Scrollable Space */}
+        <div className="flex-1 overflow-y-auto pt-10 pb-32 scrollbar-thin">
+          <div className="max-w-4xl mx-auto px-6">
+            {messages.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center pt-10 text-center animate-fade-in-up">
+                <div className="w-24 h-24 bg-white rounded-3xl shadow-xl border border-slate-100 flex items-center justify-center mb-8 relative">
+                   <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                     <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                     </svg>
+                   </div>
+                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 border-4 border-white rounded-full" />
+                </div>
+                <h2 className="text-5xl font-black mb-4 tracking-tighter">
+                   <span className="text-[#1E3A8A]">Database</span><span className="text-orange-500">Agent</span>
+                </h2>
+                <p className="max-w-xl text-slate-500 font-medium leading-relaxed mb-12">
+                  Welcome to your autonomous analytics engine. Ask any data question in plain English, and I'll handle the SQL, analysis, and visualization.
+                </p>
+
+                {/* Quick Insights Row - Subtle Blue */}
+                <div className="w-full flex items-center justify-center gap-4 mb-12">
+                   {[
+                     { l: 'DB Connection', v: 'Active Northwind', c: 'text-emerald-500' },
+                     { l: 'Analysis Ready', v: '100%', c: 'text-blue-500' },
+                     { l: 'Agent Status', v: 'Idle', c: 'text-slate-400' }
+                   ].map((stat, i) => (
+                     <div key={i} className="px-6 py-3 bg-white border border-slate-100 rounded-2xl shadow-sm text-center">
+                        <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">{stat.l}</div>
+                        <div className={`text-xs font-black ${stat.c}`}>{stat.v}</div>
+                     </div>
+                   ))}
+                </div>
+                
+                <div className="w-full grid sm:grid-cols-2 gap-4 max-w-5xl pb-48 font-sans">
+                  {[
+                    { t: 'Sales Analysis', q: 'Show total sales amount by product category in Northwind, highest to lowest. Include category name and total sales.' },
+                    { t: 'Revenue Trends', q: 'Show monthly revenue trend over time in Northwind using order date. Include month and revenue, sorted by month.' },
+                    { t: 'Logistics Insight', q: 'Show top 5 shipping countries by number of orders in Northwind. Include country and order count.' },
+                    { t: 'Product Insights', q: 'Show top 10 products by total sales in Northwind. Include product name and total sales.' }
+                  ].map((s, i) => (
+                    <button 
+                      key={i} 
+                      onClick={() => handleSendMessage(s.q)}
+                      className="group text-left p-6 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-lg transition-all active:scale-[0.98]"
+                    >
+                      <div className="text-[10px] font-black uppercase tracking-widest text-blue-500 mb-2 group-hover:text-blue-600">{s.t}</div>
+                      <div className="font-bold text-sm text-slate-700 leading-snug">"{s.q}"</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-12">
+                {messages.map((message) => (
+                  <div key={message.id} className="animate-fade-in-up">
+                    {message.sender === 'user' ? (
+                       <div className="flex justify-end mb-4">
+                          <div className="max-w-[80%] bg-gradient-to-br from-blue-600 to-indigo-600 text-white px-8 py-5 rounded-[2rem] rounded-tr-none shadow-lg shadow-blue-900/10 font-bold text-sm leading-relaxed">
+                            {message.text}
+                          </div>
+                       </div>
+                    ) : (
+                       <div className="space-y-6">
+                          <div className="flex items-center gap-3 mb-2">
+                             <div className="w-8 h-8 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-blue-600 shadow-sm shrink-0">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                             </div>
+                             <span className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">Analysis Engine</span>
+                          </div>
+                          <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden prose prose-slate prose-sm max-w-none font-sans">
+                             <div dangerouslySetInnerHTML={{ __html: message.dataAnalysisOutput }} />
+                             
+                             {message.visualization && (
+                                <div className="mt-10 pt-10 border-t border-slate-100">
+                                   <div className="flex items-center justify-between mb-8">
+                                      <h4 className="text-xl font-black tracking-tight">Visual Insight</h4>
+                                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">Rendered Live</span>
+                                   </div>
+                                   <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-2 overflow-hidden shadow-inner viz-container">
+                                      {shouldRenderInIframe(message.visualization) ? (
+                                         <iframe title="viz" srcDoc={toVisualizationSrcDoc(message.visualization)} className="w-full min-h-[600px] border-none bg-white rounded-xl shadow-soft-sm" sandbox="allow-scripts allow-same-origin" />
+                                      ) : (
+                                         <div className="bg-white p-6 rounded-xl shadow-soft-sm min-h-[600px] flex items-center justify-center" dangerouslySetInnerHTML={{ __html: message.visualization }} />
+                                      )}
+                                   </div>
+                                </div>
+                             )}
+                          </div>
+                       </div>
+                    )}
+                  </div>
+                ))}
+                {isTyping && (
+                   <div className="flex items-center gap-4 animate-fade-in">
+                      <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+                         <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                         </svg>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                         <span className="text-xs font-black text-blue-500 uppercase tracking-widest">Agent Analyzing</span>
+                         <div className="flex gap-1">
+                            <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+                            <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                            <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+                         </div>
+                      </div>
+                   </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Updated Chart Rendering logic */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          .viz-container iframe { min-height: 600px !important; }
+        ` }} />
+
+
+        {/* Floating Input Area */}
+        <div className="absolute bottom-10 left-0 right-0 z-30 pointer-events-none">
+          <div className="max-w-4xl mx-auto px-6 pointer-events-auto">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[2.5rem] blur opacity-10 group-focus-within:opacity-25 transition duration-700" />
+              <div className="relative flex items-end gap-2 bg-white border border-slate-200 p-4 rounded-[2.2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)]">
+                 <textarea
+                    ref={inputRef}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    rows={1}
+                    placeholder="Ask about your data..."
+                    className="flex-1 bg-transparent border-none outline-none ring-0 focus:ring-0 p-4 font-bold text-[#1E3A8A] placeholder:text-slate-300 min-h-[56px] max-h-48 resize-none scrollbar-none"
+                 />
+                 <button 
+                    onClick={() => handleSendMessage()}
+                    disabled={!inputValue.trim() || isTyping}
+                    className="w-14 h-14 rounded-2xl bg-[#1E3A8A] text-white flex items-center justify-center hover:bg-blue-600 hover:shadow-xl hover:shadow-blue-200 transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed group/btn"
+                 >
+                    <svg className="w-6 h-6 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                 </button>
+              </div>
+            </div>
+            <div className="mt-4 text-center">
+               <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Press Enter to analyze and visualize</span>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

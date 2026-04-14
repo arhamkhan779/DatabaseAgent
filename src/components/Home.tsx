@@ -1,44 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const painStats = [
   {
-    value: '80%',
-    label: 'of data scientists’ time can go into collecting, cleaning, and organizing data',
-    note: 'That is effort lost before analysis even starts.',
+    value: 'Ready',
+    label: 'Connect your SQL database and start questioning immediately.',
+    note: 'Instant Setup',
   },
   {
-    value: '30%',
-    label: 'of knowledge-worker time can go into looking for data',
-    note: 'Repeated searching is wasted capacity across the team.',
+    value: 'Automated',
+    label: 'Data is fetched, processed, and analyzed with zero manual effort.',
+    note: 'Hands-off',
   },
   {
-    value: '$12.9M',
-    label: 'average annual cost of poor data quality per organization',
-    note: 'Bad data drives rework in queries, analysis, and reporting.',
+    value: 'Visual',
+    label: 'Complex datasets are automatically transformed into clean charts.',
+    note: 'Seamless',
   },
 ];
 
 const workflowSteps = [
   {
-    title: 'Ask in plain English',
-    body: 'Describe the metric you need, the slice you care about, or the trend you want to compare.',
+    title: 'Text-to-SQL Agent',
+    body: 'The agent understands your natural language and database schema to write precise, optimized SQL queries automatically.',
+    gradient: 'from-[#2563EB] to-[#3B82F6]',
+    icon: (
+      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
   },
   {
-    title: 'Inspect the SQL',
-    body: 'Review the generated query, adjust filters, and keep every step transparent before you run it.',
+    title: 'Analytical Insight Agent',
+    body: 'Beyond raw rows, the agent performs deep statistical analysis to provide human-readable insights and trends from your data.',
+    gradient: 'from-[#EA580C] to-[#FB923C]',
+    icon: (
+      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+      </svg>
+    ),
   },
   {
-    title: 'Ship the visualization',
-    body: 'Turn rows into a chart, a summary, or a dashboard-ready answer in the same flow.',
+    title: 'Visual Visualization Agent',
+    body: 'Transforming analysis into action. The agent crafts professional-grade charts and dashboards based on the discovered insights.',
+    gradient: 'from-[#059669] to-[#10B981]',
+    icon: (
+      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 13v-1m4 1v-3m4 3V8M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+      </svg>
+    ),
   },
 ];
 
 const visualizationPrinciples = [
-  'Choose the right chart for the question.',
-  'Keep layouts predictable so the eye knows where to go.',
-  'Use color sparingly to highlight what matters.',
-  'Add context with labels, callouts, and annotations.',
+  'Context-aware chart selection.',
+  'Deep analytical summaries.',
+  'Clean, readable data tables.',
+  'Instant boardroom-ready exports.',
 ];
 
 const chartBars = [
@@ -53,327 +71,363 @@ const chartBars = [
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#081016] text-[#f4efe7]">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-[-8rem] top-[-6rem] h-[24rem] w-[24rem] rounded-full bg-[#c48d3a]/12 blur-3xl" />
-        <div className="absolute right-[-7rem] top-[8rem] h-[20rem] w-[20rem] rounded-full bg-[#8fb9aa]/10 blur-3xl" />
-        <div className="absolute bottom-[-10rem] left-[18%] h-[28rem] w-[28rem] rounded-full bg-[#5a6a7a]/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:96px_96px] opacity-20 [mask-image:radial-gradient(circle_at_center,black,transparent_82%)]" />
-      </div>
-
-      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-6 sm:px-8 lg:px-10">
-        <header className="flex items-center justify-between border-b border-white/10 pb-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
-              <svg className="h-5 w-5 text-[#c48d3a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <ellipse cx="12" cy="6" rx="7" ry="3" />
-                <path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6" />
-                <path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6" />
-              </svg>
+    <div className="min-h-screen bg-white font-sans text-primary">
+      {/* Navigation Layered on Hero */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? 'bg-white/90 backdrop-blur-md py-3 shadow-soft-lg' : 'bg-transparent py-8'
+      }`}>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <div className="flex items-center gap-10">
+            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
+               <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${scrolled ? 'bg-primary shadow-lg' : 'bg-white shadow-xl group-hover:bg-primary group-hover:scale-105'}`}>
+                  <svg className={`w-5 h-5 transition-colors ${scrolled ? 'text-white' : 'text-primary group-hover:text-white'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <ellipse cx="12" cy="6" rx="7" ry="3" />
+                    <path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6" />
+                    <path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6" />
+                  </svg>
+               </div>
+               <span className={`font-black text-xl tracking-tighter transition-colors ${scrolled ? 'text-primary' : 'text-white'}`}>DatabaseAgent</span>
             </div>
-            <div>
-              <p className="font-display text-sm font-semibold tracking-[0.24em] text-[#f4efe7]/80 uppercase">Database Agent</p>
-              <p className="mt-1 text-base font-medium text-[#d9d0c4] sm:text-lg">Natural language to SQL, insights, and visualization</p>
+
+            <div className={`hidden lg:flex items-center gap-8 text-xs font-black uppercase tracking-widest transition-colors ${scrolled ? 'text-slate-500' : 'text-white/70'}`}>
+              <a href="#about" className="hover:text-cta transition-colors">Discover</a>
+              <a href="#visuals" className="hover:text-cta transition-colors">Features</a>
+              <a href="#" className="hover:text-cta transition-colors">Contact</a>
             </div>
           </div>
 
-          <div className="hidden items-center gap-8 text-sm text-[#ddd6ca] md:flex">
-            <a href="#problem" className="transition-colors hover:text-white">Problem</a>
-            <a href="#solution" className="transition-colors hover:text-white">Solution</a>
-            <a href="#visuals" className="transition-colors hover:text-white">Data Visualization</a>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
+          <div className="flex items-center gap-6">
+            <button 
               onClick={() => navigate('/auth?mode=login')}
-              className="rounded-full border border-white/15 bg-transparent px-4 py-2 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/5"
+              className={`text-xs font-black uppercase tracking-widest transition-colors ${scrolled ? 'text-slate-600' : 'text-white hover:text-white/80'}`}
             >
               Login
             </button>
-            <button
+            <button 
               onClick={() => navigate('/auth?mode=register')}
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/10"
+              className={`btn px-6 py-2.5 text-xs uppercase font-black tracking-widest transition-all ${scrolled ? 'btn-primary' : 'bg-white/10 text-white border border-white hover:bg-white hover:text-primary shadow-2xl shadow-black/10'}`}
             >
-              Get started
+              Start for Free
             </button>
           </div>
-        </header>
+        </div>
+      </nav>
 
-        <section className="grid flex-1 items-center gap-12 py-10 lg:grid-cols-[1.1fr_0.9fr] lg:py-16">
-          <div className="relative max-w-3xl">
-            <div className="mb-8 flex items-center gap-4 text-base text-[#dcccad] sm:text-lg">
-              <span className="h-px w-12 bg-[#c48d3a]/75" />
-              <span className="font-medium tracking-[0.045em]">
-                Built for teams that need fast, reliable data insights and visualizations.
-              </span>
-            </div>
+      {/* High-Impact Hero Section */}
+      <section className="relative min-h-[90vh] flex items-center justify-center text-center px-6 overflow-hidden bg-gradient-to-br from-[#1E40AF] via-[#3B82F6] to-[#6366F1]">
+        {/* Animated Background Textures */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/20 rounded-full blur-[100px] animate-blob" />
+          <div className="absolute top-[20%] right-[-10%] w-[40%] h-[40%] bg-indigo-200/20 rounded-full blur-[100px] animate-blob [animation-delay:2s]" />
+        </div>
 
-            <h1 className="font-display max-w-2xl text-5xl font-semibold leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl xl:text-[5.6rem]">
-              Stop wasting hours on SQL.
-              <span className="mt-5 block text-[#f1c27d]">Ask better questions. Get instant answers.</span>
-            </h1>
+        <div className="relative z-10 max-w-4xl mx-auto pt-32 md:pt-40">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight mb-6 animate-fade-in-up leading-tight">
+            Plain text to insights. <br />
+            <span className="text-white/70">Visualized in seconds.</span>
+          </h1>
+          
+          <p className="text-lg md:text-xl text-white/80 font-medium max-w-2xl mx-auto mb-8 animate-fade-in-up delay-100 leading-relaxed font-sans">
+            Autonomous data analysis from prompt to chart. Describe your query, and we'll handle the rest—<span className="text-white font-black underline decoration-white decoration-4 underline-offset-4">no SQL required.</span>
+          </p>
 
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#ddd6ca] sm:text-xl">
-              The drag is not only writing the query. It is hunting for the right table,
-              rewriting joins, checking edge cases, and turning raw rows into something
-              a team can actually use. Database Agent collapses that work into one flow.
-            </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 animate-fade-in-up delay-200 mb-20 md:mb-32">
+             <button 
+               onClick={() => navigate('/auth?mode=register')}
+               className="btn bg-white text-blue-700 px-10 py-5 text-lg shadow-2xl shadow-black/20 hover:scale-105 active:scale-95"
+             >
+               TRY FOR FREE
+             </button>
+             <button 
+               className="btn bg-transparent border-2 border-white/40 text-white px-10 py-5 text-lg hover:bg-white/10 hover:border-white transition-all"
+             >
+               BOOK A DEMO
+             </button>
+          </div>
+        </div>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <button
-                onClick={() => navigate('/auth?mode=register')}
-                className="inline-flex items-center justify-center rounded-full bg-[#f1c27d] px-6 py-3.5 text-sm font-semibold text-[#11151b] transition hover:bg-[#f5d39e]"
-              >
-                Start free
-                <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </button>
-              <a
-                href="#solution"
-                className="inline-flex items-center justify-center rounded-full border border-white/15 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/5"
-              >
-                See the workflow
-              </a>
-            </div>
+        {/* Hero Curve */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg className="w-full h-auto text-white translate-y-1" viewBox="0 0 1440 120" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 120L1440 120V40.2373C1440 40.2373 1080 0 720 0C360 0 0 40.2373 0 40.2373V120Z" />
+          </svg>
+        </div>
+      </section>
 
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
-              {painStats.map((stat) => (
-                <div key={stat.value} className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <div className="text-3xl font-semibold tracking-[-0.05em] text-white">{stat.value}</div>
-                  <div className="mt-2 text-sm leading-6 text-[#ddd6ca]">{stat.label}</div>
-                  <div className="mt-auto pt-3 text-xs uppercase tracking-[0.18em] text-[#b8a995]">{stat.note}</div>
-                </div>
-              ))}
-            </div>
+      {/* Problem Section */}
+      <section className="py-24 px-6 bg-slate-50 border-bottom border-slate-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-blue-600 font-black text-xs uppercase tracking-[0.2em] mb-4 block">The Context</span>
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Analysis is currently broken.</h2>
           </div>
 
-          <div className="relative">
-            <div className="absolute inset-0 -z-10 rounded-[2rem] bg-gradient-to-br from-[#c48d3a]/10 via-transparent to-[#8fb9aa]/10 blur-2xl" />
-            <div className="rounded-[2rem] border border-white/10 bg-[#0d151c]/90 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.22em] text-[#b8a995]">Live preview</p>
-                  <p className="mt-1 text-lg font-semibold text-white">Revenue by region</p>
-                </div>
-                <div className="rounded-full border border-[#8fb9aa]/20 bg-[#8fb9aa]/10 px-3 py-1 text-xs font-medium text-[#cce4da]">
-                  Ready to visualize
-                </div>
-              </div>
-
-              <div className="mt-5 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                  <div className="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-[#b8a995]">
-                    <span>Generated SQL</span>
-                    <span className="text-[#8fb9aa]">Explainable</span>
-                  </div>
-                  <pre className="mt-4 overflow-x-auto whitespace-pre-wrap text-sm leading-7 text-[#f4efe7]">
-{`SELECT region,
-       SUM(revenue) AS revenue,
-       COUNT(*) AS orders
-FROM orders
-WHERE created_at >= date_trunc('month', current_date)
-GROUP BY region
-ORDER BY revenue DESC;`}
-                  </pre>
-                  <div className="mt-4 flex flex-wrap gap-2 text-xs text-[#ddd6ca]">
-                    <span className="rounded-full bg-white/5 px-3 py-1">Review</span>
-                    <span className="rounded-full bg-white/5 px-3 py-1">Adjust</span>
-                    <span className="rounded-full bg-white/5 px-3 py-1">Run</span>
-                    <span className="rounded-full bg-white/5 px-3 py-1">Share</span>
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.18em] text-[#b8a995]">Chart view</p>
-                      <p className="mt-1 text-sm text-[#ddd6ca]">Sales trend over the last 7 days</p>
-                    </div>
-                    <div className="rounded-full border border-white/10 px-3 py-1 text-xs text-[#ddd6ca]">Line + bars</div>
-                  </div>
-
-                  <div className="mt-5 flex h-56 items-end gap-3 rounded-2xl border border-white/10 bg-[#091017] p-4">
-                    {chartBars.map((bar) => (
-                      <div key={bar.label} className="flex flex-1 flex-col items-center gap-2">
-                        <div className="flex h-40 w-full items-end justify-center">
-                          <div
-                            className="w-full max-w-[2.1rem] rounded-t-xl bg-gradient-to-t from-[#c48d3a] to-[#f1c27d] shadow-[0_0_24px_rgba(241,194,125,0.18)]"
-                            style={{ height: `${bar.value}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-[#b8a995]">{bar.label}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-3 gap-3 text-center text-xs">
-                    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                      <div className="text-white">+18%</div>
-                      <div className="mt-1 text-[#b8a995]">MoM</div>
-                    </div>
-                    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                      <div className="text-white">2.1s</div>
-                      <div className="mt-1 text-[#b8a995]">avg. answer</div>
-                    </div>
-                    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                      <div className="text-white">4 charts</div>
-                      <div className="mt-1 text-[#b8a995]">ready to share</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="problem" className="border-t border-white/10 py-16 lg:py-20">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b8a995]">The problem</p>
-              <h2 className="font-display mt-4 max-w-xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
-                Teams do not just need SQL. They need the answer to arrive without friction.
-              </h2>
-              <p className="mt-5 max-w-xl text-base leading-7 text-[#ddd6ca] sm:text-lg">
-                Research keeps repeating the same signal: knowledge workers lose large chunks of time
-                finding information, and data teams burn even more time translating vague questions into
-                queries, charts, and status updates.
-              </p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <p className="text-sm uppercase tracking-[0.2em] text-[#b8a995]">Pain</p>
-                <p className="font-display mt-3 text-xl font-semibold text-white">Rewriting the same query, again and again.</p>
-                <p className="mt-3 text-sm leading-6 text-[#ddd6ca]">One typo or join change can send the whole analysis back to zero.</p>
-              </div>
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <p className="text-sm uppercase tracking-[0.2em] text-[#b8a995]">Pain</p>
-                <p className="font-display mt-3 text-xl font-semibold text-white">Results trapped in a table that nobody will read.</p>
-                <p className="mt-3 text-sm leading-6 text-[#ddd6ca]">If the output is not visual, the insight stays hidden in rows.</p>
-              </div>
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <p className="text-sm uppercase tracking-[0.2em] text-[#b8a995]">Pain</p>
-                <p className="font-display mt-3 text-xl font-semibold text-white">A slow path from question to decision.</p>
-                <p className="mt-3 text-sm leading-6 text-[#ddd6ca]">By the time the answer lands, the meeting has already moved on.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="solution" className="border-t border-white/10 py-16 lg:py-20">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b8a995]">The solution</p>
-              <h2 className="font-display mt-4 text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
-                A cleaner workflow: ask, inspect, visualize, share.
-              </h2>
-            </div>
-            <p className="max-w-2xl text-base leading-7 text-[#ddd6ca]">
-              The product behaves like a disciplined analyst, not a decorative chatbot. It gives you
-              SQL you can inspect, visuals you can trust, and a result you can explain.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {workflowSteps.map((step, index) => (
-              <div key={step.title} className="rounded-3xl border border-white/10 bg-[#0c141b] p-6">
-                <div className="text-sm font-semibold uppercase tracking-[0.2em] text-[#f1c27d]">0{index + 1}</div>
-                <h3 className="font-display mt-3 text-2xl font-semibold tracking-[-0.03em] text-white">{step.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-[#ddd6ca]">{step.body}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="visuals" className="border-t border-white/10 py-16 lg:py-20">
-          <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b8a995]">Built for insights and visualization</p>
-              <h2 className="font-display mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
-                Data visualization should clarify the story, not add another layer of noise.
-              </h2>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-[#ddd6ca] sm:text-lg">
-                Good dashboards use the right chart, predictable layouts, restrained color, and explicit context.
-                Tableau’s best-practice guidance says those choices help people see the story faster and uncover hidden information.
-                That is the same philosophy behind this landing page and the product experience.
-              </p>
-
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                {visualizationPrinciples.map((principle) => (
-                  <div key={principle} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <div className="mt-1 h-2.5 w-2.5 rounded-full bg-[#8fb9aa]" />
-                    <p className="text-sm leading-6 text-[#eee7db]">{principle}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-[2rem] border border-white/10 bg-[#0d151c] p-5">
-              <div className="rounded-[1.5rem] border border-white/10 bg-[#091017] p-5">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-[#b8a995]">Dashboard summary</p>
-                    <p className="mt-1 text-lg font-semibold text-white">What changed this week</p>
-                  </div>
-                  <div className="rounded-full border border-white/10 px-3 py-1 text-xs text-[#ddd6ca]">Auto-updated</div>
-                </div>
-
-                <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-[#b8a995]">Top insight</p>
-                    <p className="font-display mt-3 text-3xl font-semibold tracking-[-0.05em] text-white">North region grew fastest.</p>
-                    <p className="mt-3 text-sm leading-6 text-[#ddd6ca]">That is the kind of answer that should be visible before the meeting starts.</p>
-                  </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-[#b8a995]">Visual options</p>
-                    <div className="mt-3 space-y-3 text-sm text-[#eee7db]">
-                      <div className="flex items-center justify-between rounded-xl bg-black/20 px-3 py-2"><span>Bar chart</span><span className="text-[#8fb9aa]">Best for comparisons</span></div>
-                      <div className="flex items-center justify-between rounded-xl bg-black/20 px-3 py-2"><span>Line chart</span><span className="text-[#8fb9aa]">Best for trends</span></div>
-                      <div className="flex items-center justify-between rounded-xl bg-black/20 px-3 py-2"><span>Heatmap</span><span className="text-[#8fb9aa]">Best for density</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="border-t border-white/10 py-16 lg:py-20">
-          <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/8 to-white/4 p-8 md:p-12">
-            <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="p-10 bg-white rounded-[2rem] shadow-soft-xl border border-slate-100 flex flex-col justify-between group hover:border-amber-200 transition-colors">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b8a995]">Ready to ship</p>
-                <h2 className="font-display mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
-                  Give your team a landing page that sounds like the product it represents.
-                </h2>
-                <p className="mt-5 max-w-2xl text-base leading-7 text-[#ddd6ca] sm:text-lg">
-                  Database Agent now has a stronger story: the problem is concrete, the solution is clear,
-                  the proof is quantified, and the visuals actually help the page feel like a serious product.
+                <div className="text-5xl font-black text-amber-600 mb-6 transition-transform group-hover:scale-110">80%</div>
+                <h4 className="text-xl font-black mb-4 text-slate-800">The Wrangler's Trap</h4>
+                <p className="text-slate-500 font-bold leading-relaxed text-sm">
+                  Data teams spend 80% of their time collecting and cleaning data, leaving only 20% for actual strategic analysis.
                 </p>
               </div>
+              <div className="mt-8 pt-8 border-t border-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400">Source: Tableau Research</div>
+            </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
-                <button
-                  onClick={() => navigate('/auth?mode=register')}
-                  className="inline-flex items-center justify-center rounded-full bg-[#f1c27d] px-6 py-3.5 text-sm font-semibold text-[#11151b] transition hover:bg-[#f5d39e]"
-                >
-                  Create account
-                </button>
-                <a
-                  href="#problem"
-                  className="inline-flex items-center justify-center rounded-full border border-white/15 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/5"
-                >
-                  Revisit the problem
-                </a>
+            <div className="p-10 bg-white rounded-[2rem] shadow-soft-xl border border-slate-100 flex flex-col justify-between group hover:border-indigo-200 transition-colors">
+              <div>
+                <div className="text-5xl font-black text-indigo-600 mb-6 transition-transform group-hover:scale-110">30%</div>
+                <h4 className="text-xl font-black mb-4 text-slate-800">The Discovery Gap</h4>
+                <p className="text-slate-500 font-bold leading-relaxed text-sm">
+                  Knowledge workers lose 30% of their total productivity just searching for the right data points within their organization.
+                </p>
               </div>
+              <div className="mt-8 pt-8 border-t border-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400">Source: Forrester Study</div>
+            </div>
+
+            <div className="p-10 bg-white rounded-[2rem] shadow-soft-xl border border-slate-100 flex flex-col justify-between group hover:border-rose-200 transition-colors">
+              <div>
+                <div className="text-5xl font-black text-rose-600 mb-6 transition-transform group-hover:scale-110">$12.9M</div>
+                <h4 className="text-xl font-black mb-4 text-slate-800">The Quality Drain</h4>
+                <p className="text-slate-500 font-bold leading-relaxed text-sm">
+                  Poor data quality and manual errors cost organizations an average of nearly $13 million annually in lost opportunities.
+                </p>
+              </div>
+              <div className="mt-8 pt-8 border-t border-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400">Source: Gartner / IBM</div>
             </div>
           </div>
-        </section>
-      </div>
-    </main>
+        </div>
+      </section>
+
+      {/* Solutions Section - XOOM Styled Cards */}
+      <section id="about" className="py-24 px-6 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto text-center">
+           <span className="text-blue-600 font-black text-xs uppercase tracking-[0.2em] mb-4 block">Our Solution</span>
+           <h2 className="text-3xl md:text-5xl font-black text-slate-800 mb-8 tracking-tight">
+             How DatabaseAgent transforms <br /> your business analysis
+           </h2>
+           <p className="text-lg text-slate-500 font-bold leading-relaxed mb-20 max-w-2xl mx-auto">
+             From raw datasets to board-ready insights. We eliminate technical bottlenecks with three specialized autonomous agents.
+           </p>
+
+           <div className="grid lg:grid-cols-3 gap-8">
+              {workflowSteps.map((step, i) => (
+                <div 
+                  key={i} 
+                  className={`relative p-12 rounded-3xl bg-gradient-to-br ${step.gradient} text-white shadow-2xl flex flex-col items-center text-center group hover:-translate-y-2 transition-all duration-500`}
+                >
+                   {/* Icon Container */}
+                   <div className="w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-10 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                      {step.icon}
+                   </div>
+                   
+                   <h4 className="text-2xl font-black mb-6 tracking-tight leading-tight">{step.title}</h4>
+                   <p className="text-white/80 font-bold leading-relaxed text-sm whitespace-pre-line">
+                      {step.body}
+                   </p>
+
+                   {/* Background Decorative Element */}
+                   <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                      <div className="w-16 h-16 border-t-4 border-r-4 border-white rounded-tr-3xl" />
+                   </div>
+                </div>
+              ))}
+           </div>
+        </div>
+      </section>
+
+      {/* Product Storyline - 1-2-3 Sequential Flow */}
+      <section id="visuals" className="py-24 bg-slate-50 border-y border-slate-200 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 space-y-48">
+           
+           {/* STEP 01: THE INTENT */}
+           <div className="grid lg:grid-cols-2 gap-20 items-center">
+              <div className="animate-fade-in-up">
+                 <div className="flex items-center gap-6 mb-8">
+                    <span className="text-6xl font-black text-[#1E3A8A]">01</span>
+                    <span className="text-blue-600 font-black text-xs uppercase tracking-[0.3em] bg-blue-50 px-4 py-2 rounded-full border border-blue-100">The Intent</span>
+                 </div>
+                 <h3 className="text-4xl md:text-5xl font-black mb-8 leading-tight tracking-tight text-slate-900">Start with a <br />simple question.</h3>
+                 <p className="text-lg text-slate-600 font-bold mb-10 leading-relaxed">
+                   No SQL required. No schema training necessary. Just describe what you need to know in plain English and let the engine handle the technical weight.
+                 </p>
+                 <div className="flex items-center gap-4 py-4 border-t border-slate-200">
+                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-black text-xs border border-blue-100">✓</div>
+                    <span className="text-sm font-bold text-slate-500">Supports complex multi-table relationships</span>
+                 </div>
+              </div>
+              <div className="relative group">
+                 <div className="absolute -inset-4 bg-blue-600/5 rounded-[3rem] blur-3xl opacity-10" />
+                 <div className="relative bg-white rounded-[2.5rem] border border-slate-200 p-10 shadow-2xl shadow-blue-900/10">
+                    <div className="flex items-center gap-2 mb-8">
+                       <div className="w-3 h-3 bg-slate-200 rounded-full" />
+                       <div className="w-3 h-3 bg-slate-200 rounded-full" />
+                       <div className="w-3 h-3 bg-slate-200 rounded-full" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-500 mb-6 block">Engine Input</span>
+                    <p className="text-xl md:text-3xl font-bold text-slate-800 leading-relaxed italic">
+                      "Show discount distribution in Northwind order details using buckets: No Discount, Up to 5%, 5-10%, Above 10%. Include bucket and count."
+                    </p>
+                    <div className="mt-10 pt-10 border-t border-slate-100 flex items-center justify-between font-sans">
+                       <div className="flex items-center gap-3">
+                          <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Identifying Schema Path...</span>
+                       </div>
+                       <div className="text-4xl font-black text-slate-100">AGENT 01</div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+
+           {/* STEP 02: THE LOGIC */}
+           <div className="grid lg:grid-cols-2 gap-20 items-center">
+              <div className="order-2 lg:order-1 relative group">
+                 <div className="absolute -inset-4 bg-orange-600/5 rounded-[3rem] blur-3xl opacity-10" />
+                 <div className="relative p-2 rounded-[2.5rem] bg-white shadow-2xl shadow-orange-900/10 border border-slate-100 overflow-hidden">
+                    <img src="/insights.png" alt="Intelligence Preview" className="w-full h-auto rounded-[2rem]" />
+                 </div>
+              </div>
+              <div className="order-1 lg:order-2 animate-fade-in-up">
+                 <div className="flex items-center gap-6 mb-8">
+                    <span className="text-6xl font-black text-[#1E3A8A]">02</span>
+                    <span className="text-orange-600 font-black text-xs uppercase tracking-[0.3em] bg-orange-50 px-4 py-2 rounded-full border border-orange-100">The Logic</span>
+                 </div>
+                 <h3 className="text-4xl md:text-5xl font-black mb-8 leading-tight tracking-tight text-slate-900">Autonomous <br />data interpretation.</h3>
+                 <p className="text-lg text-slate-600 font-bold mb-10 leading-relaxed">
+                   DatabaseAgent doesn't just return rows. It analyzes trends, identifies outliers, and crafts a logical summary of your data's true story.
+                 </p>
+                 <div className="space-y-4">
+                    {['Trend Analysis & Narrative Generation', 'Autonomous Anomaly Detection'].map((f, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                         <div className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
+                         <span className="text-sm font-black text-slate-700">{f}</span>
+                      </div>
+                    ))}
+                 </div>
+              </div>
+           </div>
+
+           {/* STEP 03: THE ANSWER */}
+           <div className="grid lg:grid-cols-2 gap-20 items-center">
+              <div className="animate-fade-in-up">
+                 <div className="flex items-center gap-6 mb-8">
+                    <span className="text-6xl font-black text-[#1E3A8A]">03</span>
+                    <span className="text-blue-600 font-black text-xs uppercase tracking-[0.3em] bg-blue-50 px-4 py-2 rounded-full border border-blue-100">The Answer</span>
+                 </div>
+                 <h3 className="text-4xl md:text-5xl font-black mb-8 leading-tight tracking-tight text-slate-900">Instant, accurate <br />visualizations.</h3>
+                 <p className="text-lg text-slate-600 font-bold mb-10 leading-relaxed">
+                   The end result is a high-fidelity visualization, rendered live from your database. Ready for the boardroom, without the manual effort.
+                 </p>
+                 <div className="space-y-4">
+                   {[
+                     'Dynamic Chart Selection Engine',
+                     'Live Database Rendering'
+                   ].map((p, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                         <div className="w-1.5 h-1.5 bg-blue-600 rounded-full" />
+                         <span className="text-sm font-black text-slate-700">{p}</span>
+                      </div>
+                    ))}
+                 </div>
+              </div>
+              <div className="relative group">
+                 <div className="absolute -inset-4 bg-blue-600/5 rounded-[3rem] blur-3xl opacity-10" />
+                 <div className="relative p-2 rounded-[2.5rem] bg-white shadow-2xl shadow-blue-900/20 border border-slate-100 overflow-hidden">
+                    <img src="/visuals_image.png" alt="Visual Intelligence Preview" className="w-full h-auto rounded-[2rem]" />
+                 </div>
+              </div>
+           </div>
+
+        </div>
+      </section>
+
+      {/* Unified Final CTA & Footer */}
+      <footer className="relative py-32 px-6 bg-gradient-to-br from-[#1E40AF] via-[#3B82F6] to-[#6366F1] overflow-hidden">
+         {/* Decorative Background Elements */}
+         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 blur-[150px] rounded-full animate-blob" />
+         <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-200/10 blur-[150px] rounded-full animate-blob [animation-delay:2s]" />
+
+         <div className="max-w-7xl mx-auto relative z-10">
+            {/* CTA Part */}
+            <div className="max-w-4xl mx-auto text-center mb-32">
+               <h2 className="text-4xl md:text-7xl font-black text-white mb-10 leading-none tracking-tight">
+                  Scale your analysis <br /> 
+                  for free.
+               </h2>
+               <p className="text-white/80 font-bold mb-12 text-lg max-w-xl mx-auto">Join the new standard of autonomous data intelligence. No SQL, no bottlenecks, just insights.</p>
+               <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button onClick={() => navigate('/auth?mode=register')} className="btn px-12 py-5 bg-white text-blue-700 text-xl shadow-2xl shadow-black/20 hover:scale-105 transition-all">Start Free Trial</button>
+                  <button className="btn px-12 py-5 bg-white/10 border border-white/20 text-white text-xl hover:bg-white/20 transition-all">Learn More</button>
+               </div>
+            </div>
+
+            {/* Footer Columns Part */}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-16 mb-24 pt-24 border-t border-white/10">
+               <div className="col-span-2">
+                  <div className="flex items-center gap-3 mb-8 group cursor-pointer" onClick={() => navigate('/')}>
+                     <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-700 shadow-lg group-hover:scale-105 transition-transform">
+                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                        <ellipse cx="12" cy="6" rx="7" ry="3" />
+                        <path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6" />
+                        <path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6" />
+                        </svg>
+                     </div>
+                     <span className="font-black text-2xl tracking-tighter text-white">DatabaseAgent</span>
+                  </div>
+                  <p className="text-white/70 font-bold text-base leading-relaxed max-w-sm mb-10">
+                     The professional interface for your database. Turning natural language into autonomous analytics and visual answers.
+                  </p>
+                  <div className="flex items-center gap-4 text-white/50">
+                     {[1,2,3].map(i => (
+                        <div key={i} className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:border-white hover:text-white transition-all cursor-pointer">
+                        <div className="w-3 h-3 bg-current rounded-sm" />
+                        </div>
+                     ))}
+                  </div>
+               </div>
+               
+               {[
+                  { t: 'Product', l: ['Agent Intelligence', 'Visualization', 'Security', 'Database Connect'] },
+                  { t: 'Company', l: ['About Us', 'Contact', 'Docs', 'Status'] },
+                  { t: 'Legal', l: ['Privacy Policy', 'Terms of Service', 'Cookie Policy'] }
+               ].map((col, i) => (
+                  <div key={i}>
+                     <h5 className="text-[10px] font-black uppercase tracking-[0.2em] mb-10 text-white/40">{col.t}</h5>
+                     <ul className="space-y-5 font-bold text-sm text-white/70">
+                        {col.l.map(link => (
+                        <li key={link}>
+                           <a href="#" className="hover:text-white transition-all inline-flex items-center group">
+                              {link}
+                              <svg className="w-3 h-3 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round"/></svg>
+                           </a>
+                        </li>
+                        ))}
+                     </ul>
+                  </div>
+               ))}
+            </div>
+
+            <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-8">
+               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+                  © 2026 DatabaseAgent — Autonomous Data Analysis.
+               </p>
+               <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">System Live</span>
+               </div>
+            </div>
+         </div>
+      </footer>
+    </div>
   );
 };
 
